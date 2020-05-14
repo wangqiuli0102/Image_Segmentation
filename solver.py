@@ -112,7 +112,7 @@ class Solver(object):
 		#===========================================================================================#
 		
 		unet_path = os.path.join(self.model_path, '%s-%d-%.4f-%d-%.4f.pkl' %(self.model_type,self.num_epochs,self.lr,self.num_epochs_decay,self.augmentation_prob))
-
+		print('training:')
 		# U-Net Train
 		if os.path.isfile(unet_path):
 			# Load the pretrained Encoder

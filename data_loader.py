@@ -15,6 +15,7 @@ class ImageFolder(data.Dataset):
 		
 		# GT : Ground Truth
 		self.GT_paths = root[:-1]+'_GT/'
+		print(self.GT_paths)
 		self.image_paths = list(map(lambda x: os.path.join(root, x), os.listdir(root)))
 		self.image_size = image_size
 		self.mode = mode
@@ -25,12 +26,15 @@ class ImageFolder(data.Dataset):
 	def __getitem__(self, index):
 		"""Reads an image from a file and preprocesses it and returns."""
 		image_path = self.image_paths[index]
-		filename = image_path.split('_')[-1][:-len(".jpg")]
-		GT_path = self.GT_paths + 'ISIC_' + filename + '_segmentation.png'
+		filename = image_path.split('/')[-1][:-len(".png")]
+		GT_path = self.GT_paths + filename + '_mask.png'
 
 		image = Image.open(image_path)
 		GT = Image.open(GT_path)
-
+		# image = np.load(image_path)
+		# GT = np.load(GT_path)
+		# print(image.size)
+		# print(GT.size)
 		aspect_ratio = image.size[1]/image.size[0]
 
 		Transform = []
@@ -96,7 +100,7 @@ class ImageFolder(data.Dataset):
 
 def get_loader(image_path, image_size, batch_size, num_workers=2, mode='train',augmentation_prob=0.4):
 	"""Builds and returns Dataloader."""
-	
+
 	dataset = ImageFolder(root = image_path, image_size =image_size, mode=mode,augmentation_prob=augmentation_prob)
 	data_loader = data.DataLoader(dataset=dataset,
 								  batch_size=batch_size,
